@@ -31,11 +31,6 @@ import pro.dbro.glance.GlanceApplication;
 import pro.dbro.glance.GlancePrefsManager;
 import pro.dbro.glance.R;
 import pro.dbro.glance.SECRETS;
-import pro.dbro.glance.billing.Catalog;
-import pro.dbro.glance.billing.IabHelper;
-import pro.dbro.glance.billing.IabResult;
-import pro.dbro.glance.billing.Inventory;
-import pro.dbro.glance.billing.Purchase;
 import pro.dbro.glance.events.ChapterSelectRequested;
 import pro.dbro.glance.events.ChapterSelectedEvent;
 import pro.dbro.glance.events.WpmSelectedEvent;
@@ -52,7 +47,7 @@ public class MainActivity extends FragmentActivity implements View.OnSystemUiVis
     public static final String SPRITZ_FRAG_TAG = "spritzfrag";
     private static final int THEME_LIGHT = 0;
     private static final int THEME_DARK = 1;
-    private IabHelper mBillingHelper;
+
     private boolean mIsPremium;
     private Menu mMenu;
     private boolean mFinishAfterSpritz = false;
@@ -327,23 +322,6 @@ public class MainActivity extends FragmentActivity implements View.OnSystemUiVis
         if ((visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0) {
             dimSystemUi(true);
         }
-    }
-
-    private void setupBillingConnection(String base64EncodedPublicKey) {
-        // compute your public key and store it in base64EncodedPublicKey
-        mBillingHelper = new IabHelper(this, base64EncodedPublicKey);
-        mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                }
-                // Hooray, IAB is fully set up!
-                if (mBillingHelper == null) return;
-                // Query purchases
-                mBillingHelper.queryInventoryAsync(mGotInventoryListener);
-            }
-        });
     }
 
     /**
